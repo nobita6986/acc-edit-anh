@@ -73,10 +73,21 @@ const AppContent: React.FC = () => {
 
   const [imageToEdit, setImageToEdit] = useState<ImageToEdit | null>(null);
   const [previewImage, setPreviewImage] = useState<PreviewState>(null);
+  const [hasApiKey, setHasApiKey] = useState<boolean>(() => {
+    return typeof window !== 'undefined' ? !!(localStorage.getItem('custom_gemini_api_key') || process.env.API_KEY) : true;
+  });
   
   useEffect(() => {
     localStorage.setItem('tlab-activePage', activePage);
   }, [activePage]);
+
+  useEffect(() => {
+    const checkApiKey = () => {
+      setHasApiKey(!!(localStorage.getItem('custom_gemini_api_key') || process.env.API_KEY));
+    };
+    window.addEventListener('api_key_changed', checkApiKey);
+    return () => window.removeEventListener('api_key_changed', checkApiKey);
+  }, []);
 
   const handleOpenPreview = (url: string, onDownload: () => void) => setPreviewImage({ url, onDownload });
   const handleClosePreview = () => setPreviewImage(null);
@@ -144,6 +155,13 @@ const AppContent: React.FC = () => {
         activePage={activePage}
         setActivePage={setActivePage}
       />
+      
+      {!hasApiKey && (
+        <div className="bg-amber-500/20 border-b border-amber-500/50 text-amber-200 px-4 py-3 text-center text-sm shadow-md">
+          <span className="font-semibold">Lưu ý:</span> Bạn chưa cấu hình API Key. Vui lòng nhấn vào nút <strong>"Nhập API Key"</strong> ở góc trên bên phải để bắt đầu sử dụng.
+        </div>
+      )}
+
       <main className="mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <Suspense fallback={<SuspenseFallback />}>
           <AnimatePresence mode="wait">

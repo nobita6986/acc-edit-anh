@@ -7,6 +7,10 @@ const getAI = (): GoogleGenAI => {
     const customKey = localStorage.getItem('custom_gemini_api_key');
     const keyToUse = customKey || process.env.API_KEY;
     
+    if (!keyToUse) {
+        throw new Error('MISSING_API_KEY');
+    }
+
     if (!aiInstance || currentApiKey !== keyToUse) {
         aiInstance = new GoogleGenAI({ apiKey: keyToUse as string });
         currentApiKey = keyToUse as string;
@@ -43,7 +47,9 @@ const handleError = (error: any, context: string): never => {
     let specificMessage = error.message;
     const errorMessageLower = specificMessage.toLowerCase();
     
-    if (errorMessageLower.includes('safety')) {
+    if (errorMessageLower.includes('missing_api_key')) {
+      specificMessage = 'Vui lòng nhập API Key trong phần "Nhập API Key" ở góc trên bên phải để sử dụng tính năng này.';
+    } else if (errorMessageLower.includes('safety')) {
       specificMessage = 'Yêu cầu của bạn đã bị từ chối vì lý do an toàn. Vui lòng thử một mô tả hoặc hình ảnh khác.';
     } else if (errorMessageLower.includes('429') || errorMessageLower.includes('rate limit')) {
       specificMessage = 'Bạn đã gửi quá nhiều yêu cầu. Vui lòng đợi một lát rồi thử lại.';
