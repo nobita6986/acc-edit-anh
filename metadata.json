@@ -1,0 +1,6 @@
+{
+  "name": "Bộ tool sửa ảnh",
+  "description": "An AI-powered web application for generating and editing images. Users can create images from text descriptions, perform AI-based edits on existing photos, and explore various creative possibilities.",
+  "requestFramePermissions": [],
+  "hideCodeAssistant": true
+}
