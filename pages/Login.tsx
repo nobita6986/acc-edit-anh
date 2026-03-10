@@ -52,7 +52,7 @@ const Login: React.FC<LoginProps> = ({ onLogin, onClose }) => {
           
           <div className="text-center mb-8">
             <h1 className="text-4xl font-black bg-clip-text text-transparent bg-gradient-to-r from-sky-400 to-fuchsia-500">
-              NC
+              StudyAI86
             </h1>
             <p className="text-slate-400 mt-2">
               {t('login.title')}

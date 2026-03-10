@@ -138,17 +138,17 @@ const VideoIdeaGenerator: React.FC<VideoIdeaGeneratorProps> = ({ isTrial, trialC
     const trialEnded = isTrial && trialCreations <= 0;
 
     // FIX: Explicitly typed the reduce accumulator to prevent type inference issues.
-    const groupedVoices = voices.reduce((acc: Record<string, SpeechSynthesisVoice[]>, voice) => {
+    const groupedVoices: { [key: string]: SpeechSynthesisVoice[] } = voices.reduce((acc: { [key: string]: SpeechSynthesisVoice[] }, voice) => {
         const lang = voice.lang;
         if (!acc[lang]) {
             acc[lang] = [];
         }
         acc[lang].push(voice);
         return acc;
-    }, {} as Record<string, SpeechSynthesisVoice[]>);
+    }, {});
 
     // Prioritize Vietnamese voices at the top
-    const sortedGroupedVoices = Object.entries(groupedVoices).sort(([langA], [langB]) => {
+    const sortedGroupedVoices: [string, SpeechSynthesisVoice[]][] = Object.entries(groupedVoices).sort(([langA], [langB]) => {
         if (langA.startsWith('vi')) return -1;
         if (langB.startsWith('vi')) return 1;
         return langA.localeCompare(langB);
